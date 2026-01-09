@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using TeamManager.Data;
-using TeamManager.Models;
 
 namespace TeamManager.Services;
 

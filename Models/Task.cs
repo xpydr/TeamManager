@@ -7,5 +7,4 @@ public class Task
     public string Description { get; set; } = string.Empty;
     public string AssignedUserId { get; set; } = string.Empty;
     public string Status { get; set; } = "Pending";
-
 }
