@@ -5,11 +5,11 @@ namespace TeamManager.Controllers;
 
 [ApiController]
 [Route("api/tasks")]
-public class TasksController : ControllerBase
+public class TaskController : ControllerBase
 {
     private readonly TaskService _taskService;
 
-    public TasksController(TaskService taskService)
+    public TaskController(TaskService taskService)
     {
         _taskService = taskService;
     }
