@@ -8,7 +8,12 @@ namespace TeamManager.Services;
 
 public class LeaveService(AppDbContext context)
 {
- 
+    public async Task<LeaveDto?> GetLeaveByIdAsync(int id)
+    {
+        var leave = await context.Leaves.FindAsync([id]);
+        return leave?.ToDto();
+    }
+
     public async Task<List<LeaveDto>> GetAllLeavesAsync()
     {
         return await context.Leaves
