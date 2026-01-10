@@ -6,7 +6,7 @@ namespace TeamManager.Models;
 public class Leave : IValidatableObject
 {
     public int Id { get; set; }
-    public string UserId { get; set; } = null!;
+    public int UserId { get; set; }
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
     public LeaveStatus Status { get; set; } = LeaveStatus.Pending;
