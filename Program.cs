@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TeamManager.Data;
@@ -9,6 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add logging
+builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Information);
 
 // Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -24,31 +29,49 @@ var app = builder.Build();
 // Middleware
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Global error handling
-app.UseExceptionHandler(errorApp =>
+else
 {
-    errorApp.Run(async context =>
+    app.UseExceptionHandler(errorApp =>
     {
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        context.Response.ContentType = "application/problem+json";
-
-        var problem = new ProblemDetails
+        errorApp.Run(async context =>
         {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
-            Title = "An unexpected error occurred",
-            Status = 500,
-            Detail = "The server encountered an unexpected condition.",
-            Instance = context.Request.Path
-        };
+            var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
 
-        await context.Response.WriteAsJsonAsync(problem);
+            var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+
+            var exception = exceptionHandlerPathFeature?.Error;
+
+            if (exception != null)
+            {
+                logger.LogError(exception,
+                    "Unhandled exception occurred. Path: {Path}, Method: {Method}",
+                    context.Request.Path,
+                    context.Request.Method);
+            }
+
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/problem+json";
+
+            var problem = new ProblemDetails
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+                Title = "An unexpected error occurred",
+                Status = 500,
+                Detail = "We're sorry, but something went wrong on our end.",
+                Instance = context.Request.Path
+            };
+
+            await context.Response.WriteAsJsonAsync(problem);
+        });
     });
-});
+}
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
 app.Run();
