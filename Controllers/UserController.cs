@@ -16,8 +16,8 @@ public class UserController(UserService userService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserDto>> GetUser(int id, CancellationToken ct = default)
     {
-        var result = await userService.GetUserByIdAsync(id, ct);
-        return result is null ? NotFound() : Ok(result);
+        var user = await userService.GetUserByIdAsync(id, ct);
+        return user is null ? NotFound() : Ok(user);
     }
 
     [HttpGet]
