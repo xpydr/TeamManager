@@ -1,31 +1,64 @@
 using Microsoft.AspNetCore.Mvc;
-using TeamManager.Models;
 using TeamManager.Services;
 using TeamManager.Dtos;
+using TeamManager.Exceptions;
+using System.ComponentModel.DataAnnotations;
 
 namespace TeamManager.Controllers;
 
 [ApiController]
 [Route("api/users")]
+[ProducesResponseType<ProblemDetails>(StatusCodes.Status500InternalServerError)]
 public class UserController(UserService userService) : ControllerBase
 {
-    [HttpGet("{id}")]
-    public async Task<ActionResult<UserDto>> GetUser(int id)
+    [HttpGet("{id:int}")]
+    [ProducesResponseType<UserDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<UserDto>> GetUser(int id, CancellationToken ct = default)
     {
-        var result = await userService.GetUserByIdAsync(id);
+        var result = await userService.GetUserByIdAsync(id, ct);
         return result is null ? NotFound() : Ok(result);
     }
+
     [HttpGet]
-    public async Task<IActionResult> GetUsers()
+    [ProducesResponseType<IEnumerable<UserDto>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers(CancellationToken ct = default)
     {
-        var users = await userService.GetAllUsersAsync();
+        var users = await userService.GetAllUsersAsync(ct);
         return Ok(users);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUser(User user)
+    [ProducesResponseType<UserDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<UserDto>> CreateUser([FromBody] CreateUserDto dto, CancellationToken ct = default)
     {
-        var created = await userService.CreateUserAsync(user);
-        return Ok(created);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            var created = await userService.CreateUserAsync(dto, ct);
+            return CreatedAtAction(nameof(GetUser), new { id = created.Id }, created);
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Validation Failed",
+                Detail = ex.Message
+            });
+        }
+        catch (DuplicateEmailException ex)
+        {
+            return Conflict(new ProblemDetails 
+            {
+                Title = "Email already exists",
+                Detail = ex.Message 
+            });
+        }
     }
 }
