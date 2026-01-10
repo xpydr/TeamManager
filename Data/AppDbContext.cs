@@ -1,13 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TeamManager.Models;
 
 namespace TeamManager.Data;
 
-public class AppDbContext : DbContext
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
     public DbSet<User> Users { get; set; }
     public DbSet<Models.Task> Tasks { get; set; }
     public DbSet<Leave> Leaves { get; set; }
