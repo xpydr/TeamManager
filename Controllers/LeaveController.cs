@@ -6,26 +6,19 @@ namespace TeamManager.Controllers;
 
 [ApiController]
 [Route("api/leave")]
-public class LeavesController : ControllerBase
+public class LeavesController(LeaveService leaveService) : ControllerBase
 {
-    private readonly LeaveService _leaveService;
-
-    public LeavesController(LeaveService leaveService)
-    {
-        _leaveService = leaveService;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetLeaves()
     {
-        var leaves = await _leaveService.GetAllLeavesAsync();
+        var leaves = await leaveService.GetAllLeavesAsync();
         return Ok(leaves);
     }
 
     [HttpPost]
     public async Task<IActionResult> CreateLeave(Leave leave)
     {
-        var created = await _leaveService.CreateLeaveAsync(leave);
+        var created = await leaveService.CreateLeaveAsync(leave);
         return Ok(leave);
     }
 }
