@@ -24,7 +24,7 @@ public class LeavesController(LeaveService leaveService) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<TaskDto>> CreateLeave(CreateLeaveDto dto)
+    public async Task<ActionResult<LeaveDto>> CreateLeave(CreateLeaveDto dto)
     {
         if (!ModelState.IsValid)
         {
