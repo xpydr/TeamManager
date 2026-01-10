@@ -1,22 +1,27 @@
 using Microsoft.EntityFrameworkCore;
 using TeamManager.Data;
 using TeamManager.Models;
+using TeamManager.Dtos;
+using TeamManager.Mappings;
 
 namespace TeamManager.Services;
 
 public class LeaveService(AppDbContext context)
 {
-    private readonly AppDbContext _context = context;
-
-    public async Task<List<Leave>> GetAllLeavesAsync()
+ 
+    public async Task<List<LeaveDto>> GetAllLeavesAsync()
     {
-        return await _context.Leaves.ToListAsync();
+        return await context.Leaves
+        .AsNoTracking()
+        .Select(l => l.ToDto())
+        .ToListAsync();
     }
 
-    public async Task<Leave> CreateLeaveAsync(Leave leave)
+    public async Task<LeaveDto> CreateLeaveAsync(CreateLeaveDto dto)
     {
-        _context.Leaves.Add(leave);
-        await _context.SaveChangesAsync();
-        return leave;
+        var leave = dto.ToEntity();
+        context.Leaves.Add(leave);
+        await context.SaveChangesAsync();
+        return leave.ToDto();
     }
 }
