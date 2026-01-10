@@ -8,6 +8,13 @@ namespace TeamManager.Controllers;
 [Route("api/leave")]
 public class LeavesController(LeaveService leaveService) : ControllerBase
 {
+    [HttpGet("{id:int}")]
+    public async Task<ActionResult<LeaveDto>> GetLeave(int id)
+    {
+        var leave = await leaveService.GetLeaveByIdAsync(id);
+        return leave is null ? NotFound() : Ok(leave);
+    }
+ 
     [HttpGet]
     public async Task<IActionResult> GetLeaves()
     {
