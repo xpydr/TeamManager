@@ -1,3 +1,5 @@
+namespace TeamManager.Dtos;
+
 public class UserDto
 {
     public int Id { get; init; }
