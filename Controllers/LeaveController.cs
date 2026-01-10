@@ -1,5 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using TeamManager.Models;
+using TeamManager.Dtos;
 using TeamManager.Services;
 
 namespace TeamManager.Controllers;
@@ -16,16 +17,32 @@ public class LeavesController(LeaveService leaveService) : ControllerBase
     }
  
     [HttpGet]
-    public async Task<IActionResult> GetLeaves()
+    public async Task<ActionResult<IEnumerable<TaskDto>>> GetLeaves()
     {
         var leaves = await leaveService.GetAllLeavesAsync();
         return Ok(leaves);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateLeave(Leave leave)
+    public async Task<ActionResult<TaskDto>> CreateLeave(CreateLeaveDto dto)
     {
-        var created = await leaveService.CreateLeaveAsync(leave);
-        return Ok(leave);
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        try
+        {
+            var created = await leaveService.CreateLeaveAsync(dto);
+            return CreatedAtAction(nameof(GetLeave), new { id = created.Id }, created);
+        }
+        catch (ValidationException ex)
+        {
+            return BadRequest(new ProblemDetails
+            {
+                Title = "Validation Failed",
+                Detail = ex.Message
+            });
+        } 
     }
 }
