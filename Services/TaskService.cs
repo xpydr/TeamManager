@@ -1,21 +1,31 @@
 using Microsoft.EntityFrameworkCore;
 using TeamManager.Data;
+using TeamManager.Dtos;
+using TeamManager.Mappings;
 
 namespace TeamManager.Services;
 
 public class TaskService(AppDbContext context)
 {
-    private readonly AppDbContext _context = context;
-
-    public async Task<List<Models.Task>> GetAllTasksAsync()
+    public async Task<TaskDto?> GetTaskByIdAsync(int id, CancellationToken ct)
     {
-        return await _context.Tasks.ToListAsync();
+        var task = await context.Tasks.FindAsync([id], ct);
+        return task?.ToDto();
     }
 
-    public async Task<Models.Task> CreateTaskAsync(Models.Task task)
+    public async Task<List<TaskDto>> GetAllTasksAsync(CancellationToken ct)
     {
-        _context.Tasks.Add(task);
-        await _context.SaveChangesAsync();
-        return task;
+        return await context.Tasks
+        .AsNoTracking()
+        .Select(t => t.ToDto())
+        .ToListAsync(ct);
+    }
+
+    public async Task<TaskDto> CreateTaskAsync(CreateTaskDto dto, CancellationToken ct)
+    {
+        var task = dto.ToEntity();
+        context.Tasks.Add(task);
+        await context.SaveChangesAsync(ct);
+        return task.ToDto();
     }
 }
