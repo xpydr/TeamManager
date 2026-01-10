@@ -1,4 +1,5 @@
 using TeamManager.Models;
+using TeamManager.Dtos;
 
 namespace TeamManager.Mappings;
 
@@ -6,11 +7,17 @@ public static class UserMappings
 {
     public static UserDto ToDto(this User user)
     {
-        return new UserDto
+        ArgumentNullException.ThrowIfNull(user);
+
+        return new UserDto(user.Id, user.Email, user.Role);
+    }
+
+    public static User ToEntity(this CreateUserDto dto)
+    {
+        return new User
         {
-            Id = user.Id,
-            Email = user.Email,
-            Role = user.Role
+            Email = dto.Email,
+            Role = dto.Role
         };
     }
 }
