@@ -4,14 +4,9 @@ using TeamManager.Models;
 
 namespace TeamManager.Services;
 
-public class LeaveService
+public class LeaveService(AppDbContext context)
 {
-    private readonly AppDbContext _context;
-
-    public LeaveService(AppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
 
     public async Task<List<Leave>> GetAllLeavesAsync()
     {

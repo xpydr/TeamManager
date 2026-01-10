@@ -4,14 +4,9 @@ using TeamManager.Models;
 
 namespace TeamManager.Services;
 
-public class UserService
+public class UserService(AppDbContext context)
 {
-    private readonly AppDbContext _context;
-
-    public UserService(AppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
 
     public async Task<List<User>> GetAllUsersAsync()
     {

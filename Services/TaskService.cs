@@ -3,14 +3,9 @@ using TeamManager.Data;
 
 namespace TeamManager.Services;
 
-public class TaskService
+public class TaskService(AppDbContext context)
 {
-    private readonly AppDbContext _context;
-
-    public TaskService(AppDbContext context)
-    {
-        _context = context;
-    }
+    private readonly AppDbContext _context = context;
 
     public async Task<List<Models.Task>> GetAllTasksAsync()
     {
