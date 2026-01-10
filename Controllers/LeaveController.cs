@@ -13,17 +13,17 @@ public class LeaveController(LeaveService leaveService) : ControllerBase
     [HttpGet("{id:int}")]
     [ProducesResponseType<LeaveDto>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<LeaveDto>> GetLeave(int id)
+    public async Task<ActionResult<LeaveDto>> GetLeave(int id, CancellationToken ct = default)
     {
-        var leave = await leaveService.GetLeaveByIdAsync(id);
+        var leave = await leaveService.GetLeaveByIdAsync(id, ct);
         return leave is null ? NotFound() : Ok(leave);
     }
 
     [ProducesResponseType<IEnumerable<LeaveDto>>(StatusCodes.Status200OK)]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LeaveDto>>> GetLeaves()
+    public async Task<ActionResult<IEnumerable<LeaveDto>>> GetLeaves(CancellationToken ct = default)
     {
-        var leaves = await leaveService.GetAllLeavesAsync();
+        var leaves = await leaveService.GetAllLeavesAsync(ct);
         return Ok(leaves);
     }
 
@@ -31,7 +31,7 @@ public class LeaveController(LeaveService leaveService) : ControllerBase
     [ProducesResponseType<LeaveDto>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<LeaveDto>> CreateLeave([FromBody] CreateLeaveDto dto)
+    public async Task<ActionResult<LeaveDto>> CreateLeave([FromBody] CreateLeaveDto dto, CancellationToken ct = default)
     {
         if (!ModelState.IsValid)
         {
@@ -40,7 +40,7 @@ public class LeaveController(LeaveService leaveService) : ControllerBase
 
         try
         {
-            var created = await leaveService.CreateLeaveAsync(dto);
+            var created = await leaveService.CreateLeaveAsync(dto, ct);
             return CreatedAtAction(nameof(GetLeave), new { id = created.Id }, created);
         }
         catch (ValidationException ex)
