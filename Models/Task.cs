@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace TeamManager.Models;
 
 public class Task
@@ -6,5 +8,6 @@ public class Task
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public int AssignedUserId { get; set; }
+    public User AssignedUser { get; set; } = null!;
     public string Status { get; set; } = "Pending";
 }

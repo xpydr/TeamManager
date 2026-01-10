@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using TeamManager.Enums;
 
 namespace TeamManager.Models;
@@ -7,6 +8,7 @@ public class Leave : IValidatableObject
 {
     public int Id { get; set; }
     public int UserId { get; set; }
+    public User User { get; set; } = null!;
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
     public LeaveStatus Status { get; set; } = LeaveStatus.Pending;
