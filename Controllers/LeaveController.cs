@@ -17,7 +17,7 @@ public class LeavesController(LeaveService leaveService) : ControllerBase
     }
  
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TaskDto>>> GetLeaves()
+    public async Task<ActionResult<IEnumerable<LeaveDto>>> GetLeaves()
     {
         var leaves = await leaveService.GetAllLeavesAsync();
         return Ok(leaves);
