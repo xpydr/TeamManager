@@ -1,22 +1,31 @@
 using Microsoft.EntityFrameworkCore;
 using TeamManager.Data;
-using TeamManager.Models;
+using TeamManager.Mappings;
+using TeamManager.Dtos;
 
 namespace TeamManager.Services;
 
 public class UserService(AppDbContext context)
 {
-    private readonly AppDbContext _context = context;
-
-    public async Task<List<User>> GetAllUsersAsync()
+    public async Task<UserDto?> GetUserByIdAsync(int id)
     {
-        return await _context.Users.ToListAsync();
+        var user = await context.Users.FindAsync(id);
+        return user?.ToDto();
     }
 
-    public async Task<User> CreateUserAsync(User user)
+    public async Task<List<UserDto>> GetAllUsersAsync()
     {
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-        return user;
+        return await context.Users
+        .AsNoTracking()
+        .Select(u => u.ToDto())
+        .ToListAsync();
+    }
+
+    public async Task<UserDto> CreateUserAsync(CreateUserDto dto)
+    {
+        var user = dto.ToEntity();
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        return user.ToDto();
     }
 }
