@@ -31,7 +31,7 @@ public class LeaveController(LeaveService leaveService) : ControllerBase
     [ProducesResponseType<LeaveDto>(StatusCodes.Status201Created)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ProblemDetails>(StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<LeaveDto>> CreateLeave(CreateLeaveDto dto)
+    public async Task<ActionResult<LeaveDto>> CreateLeave([FromBody] CreateLeaveDto dto)
     {
         if (!ModelState.IsValid)
         {
