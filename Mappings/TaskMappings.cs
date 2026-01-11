@@ -11,6 +11,9 @@ public static class TaskMappings
         return new TaskDto(task.Id, task.Title, task.Description, task.AssignedUserId, task.Status);
     }
 
+    public static List<TaskDto> ToDtoList(this IEnumerable<Models.Task> tasks)
+        => [.. tasks.Select(t => t.ToDto())];
+
     public static Models.Task ToEntity(this CreateTaskDto dto)
     {
         return new Models.Task
