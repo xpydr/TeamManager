@@ -1,31 +1,25 @@
-using Microsoft.EntityFrameworkCore;
-using TeamManager.Data;
 using TeamManager.Dtos;
 using TeamManager.Mappings;
+using TeamManager.Repositories;
 
 namespace TeamManager.Services;
 
-public class TaskService(AppDbContext context)
+public class TaskService(TaskRepository taskRepository)
 {
-    public async Task<TaskDto?> GetTaskByIdAsync(int id, CancellationToken ct)
+    public async Task<TaskDto?> GetTaskByIdAsync(int id, CancellationToken ct = default)
     {
-        var task = await context.Tasks.FindAsync([id], ct);
+        var task = await taskRepository.GetByIdAsync(id, ct);
         return task?.ToDto();
     }
 
-    public async Task<List<TaskDto>> GetAllTasksAsync(CancellationToken ct)
-    {
-        return await context.Tasks
-        .AsNoTracking()
-        .Select(t => t.ToDto())
-        .ToListAsync(ct);
-    }
+    public async Task<IEnumerable<TaskDto>> GetAllTasksAsync(CancellationToken ct = default)
+        => (await taskRepository.GetAllAsync(ct)).ToDtoList();
 
-    public async Task<TaskDto> CreateTaskAsync(CreateTaskDto dto, CancellationToken ct)
+    public async Task<TaskDto> CreateTaskAsync(CreateTaskDto dto, CancellationToken ct = default)
     {
         var task = dto.ToEntity();
-        context.Tasks.Add(task);
-        await context.SaveChangesAsync(ct);
+        await taskRepository.AddAsync(task, ct);
+        await taskRepository.SaveChangesAsync(ct);
         return task.ToDto();
     }
 }
