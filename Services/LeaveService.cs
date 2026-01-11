@@ -1,32 +1,25 @@
-using Microsoft.EntityFrameworkCore;
-using TeamManager.Data;
-using TeamManager.Models;
 using TeamManager.Dtos;
 using TeamManager.Mappings;
+using TeamManager.Repositories;
 
 namespace TeamManager.Services;
 
-public class LeaveService(AppDbContext context)
+public class LeaveService(LeaveRepository leaveRepository)
 {
-    public async Task<LeaveDto?> GetLeaveByIdAsync(int id, CancellationToken ct)
+    public async Task<LeaveDto?> GetLeaveByIdAsync(int id, CancellationToken ct = default)
     {
-        var leave = await context.Leaves.FindAsync([id], ct);
+        var leave = await leaveRepository.GetByIdAsync(id, ct);
         return leave?.ToDto();
     }
 
-    public async Task<List<LeaveDto>> GetAllLeavesAsync(CancellationToken ct)
-    {
-        return await context.Leaves
-        .AsNoTracking()
-        .Select(l => l.ToDto())
-        .ToListAsync(ct);
-    }
+    public async Task<List<LeaveDto>> GetAllLeavesAsync(CancellationToken ct = default)
+        => (await leaveRepository.GetAllAsync(ct)).ToDtoList();
 
-    public async Task<LeaveDto> CreateLeaveAsync(CreateLeaveDto dto, CancellationToken ct)
+    public async Task<LeaveDto> CreateLeaveAsync(CreateLeaveDto dto, CancellationToken ct = default)
     {
         var leave = dto.ToEntity();
-        context.Leaves.Add(leave);
-        await context.SaveChangesAsync(ct);
+        await leaveRepository.AddAsync(leave, ct);
+        await leaveRepository.SaveChangesAsync(ct);
         return leave.ToDto();
     }
 }
