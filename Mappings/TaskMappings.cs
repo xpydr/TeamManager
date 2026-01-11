@@ -8,7 +8,7 @@ public static class TaskMappings
     {
         ArgumentNullException.ThrowIfNull(task);
 
-        return new TaskDto(task.Id, task.Title, task.Description, task.AssignedUserId, task.Status);
+        return new TaskDto(task.Id, task.Title, task.Description, task.AssignedUserId, task.Status, task.DueDate, task.Priority, task.IsDeleted);
     }
 
     public static List<TaskDto> ToDtoList(this IEnumerable<Models.Task> tasks)
@@ -21,7 +21,9 @@ public static class TaskMappings
             Title = dto.Title,
             Description = dto.Description,
             AssignedUserId = dto.AssignedUserId,
-            Status = dto.Status
+            Status = dto.Status,
+            DueDate = dto.DueDate,
+            Priority = dto.Priority
         };
     }
 }

@@ -4,7 +4,7 @@ using TeamManager.Repositories;
 
 namespace TeamManager.Services;
 
-public class LeaveService(LeaveRepository leaveRepository)
+public class LeaveService(ILeaveRepository leaveRepository)
 {
     public async Task<LeaveDto?> GetLeaveByIdAsync(int id, CancellationToken ct = default)
     {

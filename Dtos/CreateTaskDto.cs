@@ -3,7 +3,9 @@ namespace TeamManager.Dtos;
 public record CreateTaskDto
 (
     string Title,
-    string Description,
+    string? Description,
     int AssignedUserId,
-    Enums.TaskStatus Status
+    Enums.TaskStatus Status,
+    DateTime? DueDate,
+    int Priority
 );

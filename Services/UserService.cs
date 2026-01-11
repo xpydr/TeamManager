@@ -5,7 +5,7 @@ using TeamManager.Repositories;
 
 namespace TeamManager.Services;
 
-public class UserService(UserRepository userRepository)
+public class UserService(IUserRepository userRepository)
 {
     public async Task<UserDto?> GetUserByIdAsync(int id, CancellationToken ct = default)
     {

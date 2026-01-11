@@ -4,7 +4,7 @@ using TeamManager.Repositories;
 
 namespace TeamManager.Services;
 
-public class TaskService(TaskRepository taskRepository)
+public class TaskService(ITaskRepository taskRepository)
 {
     public async Task<TaskDto?> GetTaskByIdAsync(int id, CancellationToken ct = default)
     {
