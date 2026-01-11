@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using TeamManager.Data;
 using TeamManager.Models;
 
+using Task = System.Threading.Tasks.Task;
+
 namespace TeamManager.Repositories;
 
 public interface IUserRepository
@@ -10,9 +12,9 @@ public interface IUserRepository
     Task<List<User>> GetAllAsync(CancellationToken ct);
     Task<User?> GetByEmailAsync(string email, CancellationToken ct);
     Task<bool> EmailExistsAsync(string email, CancellationToken ct);
-    System.Threading.Tasks.Task AddAsync(User user, CancellationToken ct);
+    Task AddAsync(User user, CancellationToken ct);
     void Update(User user);
-    Task<int> SaveChangesAsync(CancellationToken ct = default);
+    Task<int> SaveChangesAsync(CancellationToken ct);
 }
 
 public class UserRepository(AppDbContext context) : IUserRepository
@@ -32,7 +34,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
     public async Task<bool> EmailExistsAsync(string email, CancellationToken ct)
         => await context.Users.AnyAsync(u => u.Email == email, ct);
 
-    public async System.Threading.Tasks.Task AddAsync(User user, CancellationToken ct)
+    public async Task AddAsync(User user, CancellationToken ct)
         => await context.Users.AddAsync(user, ct);
 
     public void Update(User user)
