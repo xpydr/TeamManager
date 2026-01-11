@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TeamManager.Dtos;
+using TeamManager.Exceptions;
 using TeamManager.Services;
 
 namespace TeamManager.Controllers;
@@ -43,12 +44,26 @@ public class LeaveController(LeaveService leaveService) : ControllerBase
             var created = await leaveService.CreateLeaveAsync(dto, ct);
             return CreatedAtAction(nameof(GetLeave), new { id = created.Id }, created);
         }
+        catch (SchedulingConflictException ex)
+        {
+            return Conflict(new ProblemDetails
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.8",
+                Title = "Scheduling Conflict",
+                Detail = ex.Message,
+                Status = StatusCodes.Status409Conflict,
+                Instance = HttpContext.Request.Path
+            });
+        }
         catch (ValidationException ex)
         {
             return BadRequest(new ProblemDetails
             {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
                 Title = "Validation Failed",
-                Detail = ex.Message
+                Detail = ex.Message,
+                Status = StatusCodes.Status400BadRequest,
+                Instance = HttpContext.Request.Path
             });
         } 
     }
