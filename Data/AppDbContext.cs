@@ -28,7 +28,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             entity.ToTable(tb => tb.HasCheckConstraint(
                 "CK_Leave_Status_Valid",
-                "[Status] IN ('Pending', 'Approved', 'Denied')"));
+                "[Status] IN ('Pending', 'InProgress', 'Completed')"));
         });
     }
 }
