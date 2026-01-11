@@ -15,8 +15,16 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<Leave>(entity =>
         {
-            entity.Property(e => e.Status)
-                  .HasConversion<string>();
+            entity.Property(e => e.Status).HasConversion<string>();
+
+            entity.ToTable(tb => tb.HasCheckConstraint(
+                "CK_Leave_Status_Valid",
+                "[Status] IN ('Pending', 'Approved', 'Denied')"));
+        });
+
+        modelBuilder.Entity<Models.Task>(entity =>
+        {
+            entity.Property(e => e.Status).HasConversion<string>();
 
             entity.ToTable(tb => tb.HasCheckConstraint(
                 "CK_Leave_Status_Valid",
