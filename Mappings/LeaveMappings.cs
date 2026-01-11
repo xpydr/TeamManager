@@ -12,6 +12,9 @@ public static class LeaveMappings
         return new LeaveDto(leave.Id, leave.UserId, leave.StartDate, leave.EndDate, leave.Status);
     }
 
+    public static List<LeaveDto> ToDtoList(this IEnumerable<Leave> leaves)
+        => [.. leaves.Select(l => l.ToDto())];
+
     public static Leave ToEntity(this CreateLeaveDto dto)
     {
         return new Leave
