@@ -27,6 +27,6 @@ public class LeaveRepository(AppDbContext context) : ILeaveRepository
     public async Task AddAsync(Leave leave, CancellationToken ct)
         => await context.Leaves.AddAsync(leave, ct);
     
-    public Task<int> SaveChangesAsync(CancellationToken ct)
-        => context.SaveChangesAsync(ct);
+    public async Task<int> SaveChangesAsync(CancellationToken ct)
+        => await context.SaveChangesAsync(ct);
 }

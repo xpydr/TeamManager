@@ -41,8 +41,8 @@ public class UserRepository(AppDbContext context) : IUserRepository
     public void Update(User user)
         => context.Users.Update(user);
 
-    public Task<int> SaveChangesAsync(CancellationToken ct)
-        => context.SaveChangesAsync(ct);
+    public async Task<int> SaveChangesAsync(CancellationToken ct)
+        => await context.SaveChangesAsync(ct);
     
     public async Task DeleteAsync(User user, CancellationToken ct)
         => context.Users.Remove(user);
