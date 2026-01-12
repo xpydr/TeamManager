@@ -9,6 +9,7 @@ public interface ITaskRepository
     Task<List<Models.Task>> GetAllAsync(CancellationToken ct);
     Task AddAsync(Models.Task task, CancellationToken ct);
     Task<int> SaveChangesAsync(CancellationToken ct);
+    Task DeleteAsync(Models.Task task, CancellationToken ct);
 }
 
 public class TaskRepository(AppDbContext context) : ITaskRepository
@@ -26,4 +27,7 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
 
     public Task<int> SaveChangesAsync(CancellationToken ct)
         => context.SaveChangesAsync(ct);
+
+    public async Task DeleteAsync(Models.Task task, CancellationToken ct)
+        => context.Tasks.Remove(task);
 }

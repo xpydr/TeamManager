@@ -22,4 +22,14 @@ public class TaskService(ITaskRepository taskRepository)
         await taskRepository.SaveChangesAsync(ct);
         return task.ToDto();
     }
+
+    public async Task<bool> DeleteTaskAsync(int id, CancellationToken ct = default)
+    {
+        var task = await taskRepository.GetByIdAsync(id, ct);
+        if (task is null) return false;
+
+        await taskRepository.DeleteAsync(task, ct);
+        await taskRepository.SaveChangesAsync(ct);
+        return true;
+    }
 }

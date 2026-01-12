@@ -51,4 +51,13 @@ public class TaskController(TaskService taskService) : ControllerBase
             });
         }
     }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteTask(int id)
+    {
+        var success = await taskService.DeleteTaskAsync(id);
+        return success ? NoContent() : NotFound();
+    }
 }
