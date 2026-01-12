@@ -61,4 +61,13 @@ public class UserController(UserService userService) : ControllerBase
             });
         }
     }
+
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteUser(int id)
+    {
+        var success = await userService.DeleteUserAsync(id);
+        return success ? NoContent() : NotFound();
+    }
 }

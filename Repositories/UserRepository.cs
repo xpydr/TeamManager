@@ -15,6 +15,7 @@ public interface IUserRepository
     Task AddAsync(User user, CancellationToken ct);
     void Update(User user);
     Task<int> SaveChangesAsync(CancellationToken ct);
+    Task DeleteAsync(User user, CancellationToken ct);
 }
 
 public class UserRepository(AppDbContext context) : IUserRepository
@@ -42,4 +43,7 @@ public class UserRepository(AppDbContext context) : IUserRepository
 
     public Task<int> SaveChangesAsync(CancellationToken ct)
         => context.SaveChangesAsync(ct);
+    
+    public async Task DeleteAsync(User user, CancellationToken ct)
+        => context.Users.Remove(user);
 }

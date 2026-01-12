@@ -26,4 +26,14 @@ public class UserService(IUserRepository userRepository)
         await userRepository.SaveChangesAsync(ct);
         return user.ToDto();
     }
+
+    public async Task<bool> DeleteUserAsync(int id, CancellationToken ct = default)
+    {
+        var user = await userRepository.GetByIdAsync(id, ct);
+        if (user is null) return false;
+
+        await userRepository.DeleteAsync(user, ct);        
+        await userRepository.SaveChangesAsync(ct);
+        return true;
+    }
 }
