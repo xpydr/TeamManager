@@ -20,8 +20,8 @@ public class LeaveController(LeaveService leaveService) : ControllerBase
         return leave is null ? NotFound() : Ok(leave);
     }
 
-    [ProducesResponseType<IEnumerable<LeaveDto>>(StatusCodes.Status200OK)]
     [HttpGet]
+    [ProducesResponseType<IEnumerable<LeaveDto>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<LeaveDto>>> GetLeaves(CancellationToken ct = default)
     {
         var leaves = await leaveService.GetAllLeavesAsync(ct);
@@ -66,5 +66,14 @@ public class LeaveController(LeaveService leaveService) : ControllerBase
                 Instance = HttpContext.Request.Path
             });
         } 
+    }
+    
+    [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteLeave(int id)
+    {
+        var success = await leaveService.DeleteLeaveAsync(id);
+        return success ? NoContent() : NotFound();
     }
 }

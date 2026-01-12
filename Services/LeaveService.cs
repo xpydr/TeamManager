@@ -22,4 +22,14 @@ public class LeaveService(ILeaveRepository leaveRepository)
         await leaveRepository.SaveChangesAsync(ct);
         return leave.ToDto();
     }
+
+    public async Task<bool> DeleteLeaveAsync(int id, CancellationToken ct = default)
+    {
+        var leave = await leaveRepository.GetByIdAsync(id, ct);
+        if (leave is null) return false;
+
+        await leaveRepository.DeleteAsync(leave, ct);
+        await leaveRepository.SaveChangesAsync(ct);
+        return true;
+    }
 }
