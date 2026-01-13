@@ -21,8 +21,7 @@ public static class LeaveMappings
         {
             UserId = dto.UserId,
             StartDate = dto.StartDate,
-            EndDate = dto.EndDate,
-            Status = dto.Status
+            EndDate = dto.EndDate
         };
     }
 }
