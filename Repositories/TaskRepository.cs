@@ -9,7 +9,7 @@ public interface ITaskRepository
     Task<List<Models.Task>> GetAllAsync(CancellationToken ct);
     Task AddAsync(Models.Task task, CancellationToken ct);
     Task<int> SaveChangesAsync(CancellationToken ct);
-    Task DeleteAsync(Models.Task task, CancellationToken ct);
+    void Delete(Models.Task task);
 }
 
 public class TaskRepository(AppDbContext context) : ITaskRepository
@@ -28,6 +28,6 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
     public async Task<int> SaveChangesAsync(CancellationToken ct)
         => await context.SaveChangesAsync(ct);
 
-    public async Task DeleteAsync(Models.Task task, CancellationToken ct)
+    public void Delete(Models.Task task)
         => context.Tasks.Remove(task);
 }

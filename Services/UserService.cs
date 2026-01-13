@@ -32,7 +32,7 @@ public class UserService(IUserRepository userRepository)
         var user = await userRepository.GetByIdAsync(id, ct);
         if (user is null) return false;
 
-        await userRepository.DeleteAsync(user, ct);        
+        userRepository.Delete(user);        
         await userRepository.SaveChangesAsync(ct);
         return true;
     }

@@ -28,7 +28,7 @@ public class TaskService(ITaskRepository taskRepository)
         var task = await taskRepository.GetByIdAsync(id, ct);
         if (task is null) return false;
 
-        await taskRepository.DeleteAsync(task, ct);
+        taskRepository.Delete(task);
         await taskRepository.SaveChangesAsync(ct);
         return true;
     }

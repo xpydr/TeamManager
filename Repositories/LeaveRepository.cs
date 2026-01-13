@@ -12,7 +12,7 @@ public interface ILeaveRepository
     Task<List<Leave>> GetAllAsync(CancellationToken ct);
     Task AddAsync(Leave leave, CancellationToken ct);
     Task<int> SaveChangesAsync(CancellationToken ct);
-    Task DeleteAsync(Leave leave, CancellationToken ct);
+    void Delete(Leave leave);
 }
 
 public class LeaveRepository(AppDbContext context) : ILeaveRepository
@@ -31,6 +31,6 @@ public class LeaveRepository(AppDbContext context) : ILeaveRepository
     public async Task<int> SaveChangesAsync(CancellationToken ct)
         => await context.SaveChangesAsync(ct);
 
-    public async Task DeleteAsync(Leave leave, CancellationToken ct)
+    public void Delete(Leave leave)
         => context.Leaves.Remove(leave);
 }

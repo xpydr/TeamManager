@@ -28,7 +28,7 @@ public class LeaveService(ILeaveRepository leaveRepository)
         var leave = await leaveRepository.GetByIdAsync(id, ct);
         if (leave is null) return false;
 
-        await leaveRepository.DeleteAsync(leave, ct);
+        leaveRepository.Delete(leave);
         await leaveRepository.SaveChangesAsync(ct);
         return true;
     }
