@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using TeamManager.Services;
-using TeamManager.Dtos;
 using System.ComponentModel.DataAnnotations;
+using TeamManager.Dtos;
+using TeamManager.Enums;
+using TeamManager.Services;
 
 namespace TeamManager.Controllers;
 
@@ -50,6 +51,28 @@ public class TaskController(TaskService taskService) : ControllerBase
                 Detail = ex.Message
             });
         }
+    }
+
+    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> UpdateTask(int id, [FromBody] UpdateTaskDto dto, CancellationToken ct = default)
+    {
+        var result = await taskService.UpdateTaskAsync(id, dto, ct);
+
+        return result switch
+        {
+            UpdateResult.Success => NoContent(),
+            UpdateResult.NotFound => NotFound(),
+            UpdateResult.Invalid => BadRequest(),
+            UpdateResult.ConcurrencyConflict => Conflict(),
+            UpdateResult.DatabaseError => UnprocessableEntity(),
+            _ => StatusCode(500)
+        };
     }
 
     [HttpDelete("{id}")]
