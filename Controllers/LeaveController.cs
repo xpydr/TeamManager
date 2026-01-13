@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TeamManager.Dtos;
+using TeamManager.Enums;
 using TeamManager.Exceptions;
 using TeamManager.Services;
 
@@ -66,6 +67,28 @@ public class LeaveController(LeaveService leaveService) : ControllerBase
                 Instance = HttpContext.Request.Path
             });
         } 
+    }
+
+    [HttpPut("{id}")]
+    [HttpPatch("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    public async Task<IActionResult> UpdateLeave(int id, [FromBody] UpdateLeaveDto dto, CancellationToken ct = default)
+    {
+        var result = await leaveService.UpdateLeaveAsync(id, dto, ct);
+
+        return result switch
+        {
+            UpdateResult.Success => NoContent(),
+            UpdateResult.NotFound => NotFound(),
+            UpdateResult.Invalid => BadRequest(),
+            UpdateResult.ConcurrencyConflict => Conflict(),
+            UpdateResult.DatabaseError => UnprocessableEntity(),
+            _ => StatusCode(500)
+        };
     }
     
     [HttpDelete("{id}")]
