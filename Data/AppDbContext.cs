@@ -13,6 +13,15 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
 
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.Property(e => e.Role).HasConversion<string>();
+
+            entity.ToTable(tb => tb.HasCheckConstraint(
+                "CK_User_Role_Valid",
+                "[Role] IN ('Employee', 'Admin')"));
+        });
+
         modelBuilder.Entity<Leave>(entity =>
         {
             entity.Property(e => e.Status).HasConversion<string>();

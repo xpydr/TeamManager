@@ -1,3 +1,5 @@
+using TeamManager.Enums;
+
 namespace TeamManager.Dtos;
 
 public record UserDto
@@ -6,5 +8,5 @@ public record UserDto
     string FirstName,
     string LastName,
     string Email,
-    string Role
+    UserRole Role
 );

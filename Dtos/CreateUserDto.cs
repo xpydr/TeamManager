@@ -1,3 +1,5 @@
+using TeamManager.Enums;
+
 namespace TeamManager.Dtos;
 
 public record CreateUserDto
@@ -5,5 +7,5 @@ public record CreateUserDto
     string FirstName,
     string LastName,
     string Email,
-    string Role
+    UserRole Role
 );

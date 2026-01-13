@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using TeamManager.Data.Interceptors;
+using TeamManager.Enums;
 
 namespace TeamManager.Models;
 
@@ -20,8 +21,8 @@ public class User : IAuditableEntity
     [StringLength(100)]
     public string LastName { get; set; } = null!;
 
-    [StringLength(50)]
-    public string Role { get; set; } = "Employee";
+    [Required]
+    public UserRole Role { get; set; } = UserRole.Employee;
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
