@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using TeamManager.Data.Interceptors;
 using TeamManager.Enums;
 
@@ -9,9 +10,9 @@ public class Leave : IValidatableObject, IAuditableEntity
     public int Id { get; set; }
 
     [Required]
+    [ForeignKey(nameof(User))]
     public int UserId { get; set; }
 
-    [Required]
     public User User { get; set; } = null!;
 
     [Required]
