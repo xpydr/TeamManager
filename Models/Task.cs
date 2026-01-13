@@ -9,10 +9,10 @@ public class Task : IAuditableEntity
     public int Id { get; set; }
 
     [Required]
-    [StringLength(200, MinimumLength = 2, ErrorMessage = "Title must be between 2 and 200 characters.")]
+    [StringLength(200, MinimumLength = 2)]
     public string Title { get; set; } = string.Empty;
 
-    [StringLength(4000, ErrorMessage = "Description cannot exceed 4000 characters.")]
+    [StringLength(4000)]
     public string? Description { get; set; }
 
     [Required]
