@@ -14,8 +14,8 @@ public interface IUserRepository
     Task<bool> EmailExistsAsync(string email, CancellationToken ct);
     Task AddAsync(User user, CancellationToken ct);
     void Update(User user);
-    Task<int> SaveChangesAsync(CancellationToken ct);
     void Delete(User user);
+    Task<int> SaveChangesAsync(CancellationToken ct);
 }
 
 public class UserRepository(AppDbContext context) : IUserRepository
@@ -41,9 +41,9 @@ public class UserRepository(AppDbContext context) : IUserRepository
     public void Update(User user)
         => context.Users.Update(user);
 
-    public async Task<int> SaveChangesAsync(CancellationToken ct)
-        => await context.SaveChangesAsync(ct);
-    
     public void Delete(User user)
         => context.Users.Remove(user);
+        
+    public async Task<int> SaveChangesAsync(CancellationToken ct)
+        => await context.SaveChangesAsync(ct);
 }

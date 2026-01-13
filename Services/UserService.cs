@@ -1,6 +1,8 @@
-using TeamManager.Mappings;
+using Microsoft.EntityFrameworkCore;
 using TeamManager.Dtos;
+using TeamManager.Enums;
 using TeamManager.Exceptions;
+using TeamManager.Mappings;
 using TeamManager.Repositories;
 
 namespace TeamManager.Services;
@@ -25,6 +27,35 @@ public class UserService(IUserRepository userRepository)
         await userRepository.AddAsync(user, ct);
         await userRepository.SaveChangesAsync(ct);
         return user.ToDto();
+    }
+
+    public async Task<UpdateResult> UpdateUserAsync(int id, UpdateUserDto dto, CancellationToken ct = default)
+    {
+        var user = await userRepository.GetByIdAsync(id, ct);
+
+        if (user is null) return UpdateResult.NotFound;
+        if (string.IsNullOrWhiteSpace(user.Email)) return UpdateResult.Invalid;
+
+        if (dto.Email is not null) user.Email = dto.Email;
+        if (dto.FirstName is not null) user.FirstName = dto.FirstName;
+        if (dto.LastName is not null) user.LastName = dto.LastName;
+        if (dto.Role.HasValue) user.Role = dto.Role.Value;
+        
+        userRepository.Update(user);
+
+        try
+        {
+            await userRepository.SaveChangesAsync(ct);
+            return UpdateResult.Success;
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            return UpdateResult.ConcurrencyConflict;
+        }
+        catch (DbUpdateException)
+        {
+            return UpdateResult.DatabaseError;
+        }
     }
 
     public async Task<bool> DeleteUserAsync(int id, CancellationToken ct = default)
