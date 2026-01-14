@@ -1,0 +1,16 @@
+@page "/"
+@rendermode RenderMode.InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<h1>Welcome to Team Manager</h1>
+
+<p>This is your Blazor-integrated .NET application.</p>
+
+<button @onclick="IncrementCount">Click count: @count</button>
+
+@code {
+    private int count = 0;
+
+    private void IncrementCount() => count++;
+}
