@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using TeamManager.Dtos;
-using TeamManager.Enums;
-using TeamManager.Exceptions;
+using TeamManager.Data.Dtos;
+using TeamManager.Data.Enums;
+using TeamManager.Data.Exceptions;
 using TeamManager.Services;
 
 namespace TeamManager.Controllers;

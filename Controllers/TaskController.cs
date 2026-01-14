@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using TeamManager.Dtos;
-using TeamManager.Enums;
+using TeamManager.Data.Dtos;
+using TeamManager.Data.Enums;
 using TeamManager.Services;
 
 namespace TeamManager.Controllers;

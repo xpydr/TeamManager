@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
-using TeamManager.Models;
+using TeamManager.Data.Models;
 
 namespace TeamManager.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<User> Users { get; set; }
-    public DbSet<Models.Task> Tasks { get; set; }
+    public DbSet<Data.Models.Task> Tasks { get; set; }
     public DbSet<Leave> Leaves { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 "[Status] IN ('Pending', 'Approved', 'Denied')"));
         });
 
-        modelBuilder.Entity<Models.Task>(entity =>
+        modelBuilder.Entity<Data.Models.Task>(entity =>
         {
             entity.Property(e => e.Status).HasConversion<string>();
 

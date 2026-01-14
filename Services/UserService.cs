@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using TeamManager.Dtos;
-using TeamManager.Enums;
-using TeamManager.Exceptions;
-using TeamManager.Mappings;
+using TeamManager.Data.Dtos;
+using TeamManager.Data.Enums;
+using TeamManager.Data.Exceptions;
+using TeamManager.Data.Mappings;
 using TeamManager.Repositories;
 
 namespace TeamManager.Services;

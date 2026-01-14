@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TeamManager.Data;
-using TeamManager.Models;
+using TeamManager.Data.Models;
 
 using Task = System.Threading.Tasks.Task;
 
